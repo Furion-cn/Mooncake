@@ -62,7 +62,7 @@ class VLLMAdaptor {
     int freeManagedBuffer(uintptr_t user_tensor, size_t length);
 
     int transferSync(const char *target_hostname, uintptr_t buffer,
-                     uintptr_t peer_buffer_address, size_t length);
+                     uintptr_t peer_buffer_address, size_t length, int op);
 
     int transferSyncExt(const char *target_hostname, uintptr_t buffer,
                         uintptr_t peer_buffer_address, size_t length, TransferOpcode opcode);

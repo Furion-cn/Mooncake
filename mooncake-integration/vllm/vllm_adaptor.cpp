@@ -190,7 +190,7 @@ int VLLMAdaptor::freeManagedBuffer(uintptr_t buffer_addr, size_t length) {
 }
 
 int VLLMAdaptor::transferSync(const char *target_hostname, uintptr_t buffer,
-                              uintptr_t peer_buffer_address, size_t length) {
+                              uintptr_t peer_buffer_address, size_t length, int op) {
     Transport::SegmentHandle handle;
     if (handle_map_.count(target_hostname)) {
         handle = handle_map_[target_hostname];
@@ -202,7 +202,11 @@ int VLLMAdaptor::transferSync(const char *target_hostname, uintptr_t buffer,
 
     auto batch_id = engine_->allocateBatchID(1);
     TransferRequest entry;
-    entry.opcode = TransferRequest::READ;
+    if (op == 0) {
+       entry.opcode = TransferRequest::READ;
+    }else {
+       entry.opcode = TransferRequest::WRITE;
+    }
     entry.length = length;
     entry.source = (void *)buffer;
     entry.target_id = handle;
