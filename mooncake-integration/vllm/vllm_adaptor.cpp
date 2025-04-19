@@ -107,7 +107,7 @@ int VLLMAdaptor::initializeExt(const char *local_hostname,
     }
 
     if (!xport_) return -1;
-    free_list_.resize(kSlabSizeKBTabLen);
+    free_list_.resize(getKSlabSizeKBTabLen());
     doBuddyAllocate(kMaxClassId);
     return 0;
 }
@@ -132,9 +132,9 @@ int VLLMAdaptor::findClassId(size_t size) {
 
 int VLLMAdaptor::doBuddyAllocate(int class_id) {
     if (class_id == kMaxClassId) {
-        auto buffer = allocateRawBuffer(kDefaultBufferCapacity);
+        auto buffer = allocateRawBuffer(getBufferCapacity());
         buffer_list_.push_back(buffer);
-        for (size_t offset = 0; offset < kDefaultBufferCapacity;
+        for (size_t offset = 0; offset < getBufferCapacity();
              offset += 1024ull * kSlabSizeKB[kMaxClassId])
             free_list_[kMaxClassId].push(buffer + offset);
         return 0;

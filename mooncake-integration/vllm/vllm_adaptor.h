@@ -31,13 +31,14 @@
 
 using namespace mooncake;
 
-const static size_t kDefaultBufferCapacity = 2ull * 1024 * 1024 * 1024;
-const static size_t kSlabSizeKBTabLen = 16;
+const static size_t kDefaultBufferCapacity = 24ull * 1024 * 1024 * 1024;
+const static size_t kSlabSizeKBTabLen = 21;
 const static size_t kMaxClassId = kSlabSizeKBTabLen - 1;
 const static size_t kSlabSizeKB[] = {
     8,         16,        32,         64,        128,      256,
     512,       1024,      2 * 1024,   4 * 1024,  8 * 1024, 16 * 1024,
-    32 * 1024, 64 * 1024, 128 * 1024, 256 * 1024};
+    32 * 1024, 64 * 1024, 128 * 1024, 256 * 1024, 512 * 1024,
+    1024 * 1024, 2048 * 1024, 4096 * 1024, 8192 * 1024};
 
 class VLLMAdaptor {
    public:
@@ -68,7 +69,7 @@ class VLLMAdaptor {
                         uintptr_t peer_buffer_address, size_t length, TransferOpcode opcode);
 
     uintptr_t getFirstBufferAddress(const std::string &segment_name);
-    
+
     int writeBytesToBuffer(uintptr_t dest_address, char *src_ptr,
                            size_t length) {
         memcpy((void *)dest_address, (void *)src_ptr, length);
@@ -93,6 +94,33 @@ class VLLMAdaptor {
     int findClassId(size_t size);
 
     int doBuddyAllocate(int class_id);
+
+    static size_t getBufferCapacity() {
+        const char* env_buffer_capacity = getenv("MC_DEFAULT_BUFFER_CAPACITY_GB");
+        if (env_buffer_capacity) {
+            try {
+                return static_cast<size_t>(std::stoull(env_buffer_capacity)) * 1024ull * 1024 * 1024;
+            } catch (...) {
+                LOG(WARNING) << "Failed to parse MC_DEFAULT_BUFFER_CAPACITY_GB, using default value";
+            }
+        }
+        return kDefaultBufferCapacity;
+    }
+
+    static size_t getKSlabSizeKBTabLen() {
+        const char* env_k_slab_size_tab_len = getenv("MC_DEFAULT_K_SLAB_SIZE_TAB_LEN");
+        if (env_k_slab_size_tab_len) {
+            try
+            {
+                return static_cast<size_t>(std::stoull(env_k_slab_size_tab_len))
+            }
+            catch(...)
+            {
+                LOG(WARNING) << "Failed to parse MC_DEFAULT_K_SLAB_SIZE_TAB_LEN, using default value";
+            }
+        }
+        return kSlabSizeKBTabLen;
+    }
 
    private:
     std::shared_ptr<TransferEngine> engine_;

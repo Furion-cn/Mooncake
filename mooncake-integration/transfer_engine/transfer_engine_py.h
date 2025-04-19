@@ -100,6 +100,34 @@ class TransferEnginePy {
 
     int doBuddyAllocate(int class_id);
 
+    static size_t getBufferCapacity() {
+        const char* env_buffer_capacity = getenv("MC_DEFAULT_BUFFER_CAPACITY_GB");
+        if (env_buffer_capacity) {
+            try {
+                return static_cast<size_t>(std::stoull(env_buffer_capacity)) * 1024ull * 1024 * 1024;
+            } catch (...) {
+                LOG(WARNING) << "Failed to parse MC_DEFAULT_BUFFER_CAPACITY_GB, using default value";
+            }
+        }
+        return kDefaultBufferCapacity;
+    }
+
+    static size_t getKSlabSizeKBTabLen() {
+        const char* env_k_slab_size_tab_len = getenv("MC_DEFAULT_K_SLAB_SIZE_TAB_LEN");
+        if (env_k_slab_size_tab_len) {
+            try
+            {
+                return static_cast<size_t>(std::stoull(env_k_slab_size_tab_len))
+            }
+            catch(...)
+            {
+                LOG(WARNING) << "Failed to parse MC_DEFAULT_K_SLAB_SIZE_TAB_LEN, using default value";
+            }
+        }
+        return kSlabSizeKBTabLen;
+    }
+
+
    private:
     std::shared_ptr<TransferEngine> engine_;
     Transport *xport_;
