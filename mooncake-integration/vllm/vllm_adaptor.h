@@ -110,12 +110,17 @@ class VLLMAdaptor {
     static size_t getKSlabSizeKBTabLen() {
         const char* env_k_slab_size_tab_len = getenv("MC_DEFAULT_K_SLAB_SIZE_TAB_LEN");
         if (env_k_slab_size_tab_len) {
-            try
-            {
-                return static_cast<size_t>(std::stoull(env_k_slab_size_tab_len))
-            }
-            catch(...)
-            {
+            try {
+                size_t value = static_cast<size_t>(std::stoull(env_k_slab_size_tab_len));
+                constexpr size_t max_size = sizeof(kSlabSizeKB) / sizeof(kSlabSizeKB[0]);
+                if (value > max_size) {
+                    LOG(WARNING) << "MC_DEFAULT_K_SLAB_SIZE_TAB_LEN value " << value
+                               << " exceeds maximum allowed size " << max_size
+                               << ", using maximum size";
+                    return max_size;
+                }
+                return value;
+            } catch (...) {
                 LOG(WARNING) << "Failed to parse MC_DEFAULT_K_SLAB_SIZE_TAB_LEN, using default value";
             }
         }
