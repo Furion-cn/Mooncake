@@ -132,9 +132,10 @@ int VLLMAdaptor::findClassId(size_t size) {
 
 int VLLMAdaptor::doBuddyAllocate(int class_id) {
     if (class_id == kMaxClassId) {
-        auto buffer = allocateRawBuffer(getBufferCapacity());
+        const size_t buffer_capacity = getBufferCapacity();
+        auto buffer = allocateRawBuffer(buffer_capacity);
         buffer_list_.push_back(buffer);
-        for (size_t offset = 0; offset < getBufferCapacity();
+        for (size_t offset = 0; offset < buffer_capacity;
              offset += 1024ull * kSlabSizeKB[kMaxClassId])
             free_list_[kMaxClassId].push(buffer + offset);
         return 0;
