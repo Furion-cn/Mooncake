@@ -31,13 +31,13 @@
 
 using namespace mooncake;
 
-const static size_t kDefaultBufferCapacity = 2ull * 1024 * 1024 * 1024;
-const static size_t kSlabSizeKBTabLen = 16;
+const static size_t kDefaultBufferCapacity = 10ull * 1024 * 1024 * 1024;
+const static size_t kSlabSizeKBTabLen = 18;
 const static size_t kMaxClassId = kSlabSizeKBTabLen - 1;
 const static size_t kSlabSizeKB[] = {
     8,         16,        32,         64,        128,      256,
     512,       1024,      2 * 1024,   4 * 1024,  8 * 1024, 16 * 1024,
-    32 * 1024, 64 * 1024, 128 * 1024, 256 * 1024};
+    32 * 1024, 64 * 1024, 128 * 1024, 256 * 1024, 512 * 1024, 1024 * 1024};
 
 class TransferEnginePy {
    public:
