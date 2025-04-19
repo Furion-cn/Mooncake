@@ -22,8 +22,8 @@ NC="\033[0m" # No Color
 
 # Configuration
 REPO_ROOT=`pwd`
-GITHUB_PROXY=${GITHUB_PROXY:-"https://github.com"}
-GOVER=1.23.8
+GITHUB_PROXY=${GITHUB_PROXY:-"https://ghfast.top"}
+GOVER=1.23.7
 
 # Function to print section headers
 print_section() {
@@ -147,8 +147,8 @@ if [ -d "yalantinglibs" ]; then
 fi
 
 # Clone yalantinglibs
-echo "Cloning yalantinglibs from ${GITHUB_PROXY}/alibaba/yalantinglibs.git"
-git clone ${GITHUB_PROXY}/alibaba/yalantinglibs.git
+echo "Cloning yalantinglibs from ${GITHUB_PROXY}/https://github.com/alibaba/yalantinglibs.git"
+git clone ${GITHUB_PROXY}/https://github.com/alibaba/yalantinglibs.git
 check_success "Failed to clone yalantinglibs"
 
 # Build and install yalantinglibs
@@ -198,7 +198,6 @@ if [ -f "${REPO_ROOT}/.gitmodules" ]; then
     fi
 else
     echo -e "${YELLOW}No .gitmodules file found. Skipping...${NC}"
-    exit 1
 fi
 
 print_section "Installing Go $GOVER"
@@ -213,9 +212,10 @@ if command -v go &> /dev/null; then
     fi
 fi
 
+# Unset Env
 # Download Go
 echo "Downloading Go $GOVER..."
-wget -q --show-progress https://go.dev/dl/go$GOVER.linux-amd64.tar.gz
+wget -q --show-progress https://mirrors.aliyun.com/golang/go$GOVER.linux-amd64.tar.gz
 check_success "Failed to download Go $GOVER"
 
 # Install Go
@@ -238,7 +238,6 @@ fi
 
 # Return to the repository root
 cd "${REPO_ROOT}"
-
 # Print summary
 print_section "Installation Complete"
 echo -e "${GREEN}All dependencies have been successfully installed!${NC}"
