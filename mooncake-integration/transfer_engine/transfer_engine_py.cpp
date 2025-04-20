@@ -124,7 +124,11 @@ char *TransferEnginePy::allocateRawBuffer(size_t capacity) {
 }
 
 int TransferEnginePy::findClassId(size_t size) {
-    if (size > 1024ull * kSlabSizeKB[kMaxClassId]) return -1;
+    if (size > 1024ull * kSlabSizeKB[kMaxClassId]) {
+        LOG(WARNING) << "Requested size " << size << " bytes exceeds maximum slab size "
+                    << (1024ull * kSlabSizeKB[kMaxClassId]) << " bytes, using large buffer allocation";
+        return -1;
+    }
     for (int i = kMaxClassId - 2; i >= 0; --i)
         if (size > 1024ull * kSlabSizeKB[i]) return i + 1;
     return 0;

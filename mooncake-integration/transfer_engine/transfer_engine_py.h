@@ -31,7 +31,7 @@
 
 using namespace mooncake;
 
-const static size_t kDefaultBufferCapacity = 24ull * 1024 * 1024 * 1024;
+const static size_t kDefaultBufferCapacity = 64ull * 1024 * 1024 * 1024;
 const static size_t kSlabSizeKBTabLen = 21;
 const static size_t kMaxClassId = kSlabSizeKBTabLen - 1;
 const static size_t kSlabSizeKB[] = {
